@@ -328,6 +328,25 @@ function ContactFormInline() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!form.firstName.trim() || !/^[a-zA-Z\s]+$/.test(form.firstName.trim())) {
+      setStatus("error");
+      setError("First name must contain only letters.");
+      return;
+    }
+
+    if (!form.lastName.trim() || !/^[a-zA-Z\s]+$/.test(form.lastName.trim())) {
+      setStatus("error");
+      setError("Last name must contain only letters.");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      setStatus("error");
+      setError("Please enter a valid email address.");
+      return;
+    }
+
     setStatus("sending");
     setError("");
 

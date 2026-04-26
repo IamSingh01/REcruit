@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { firestore, collection, addDoc, serverTimestamp } from "../firebase";
-import { insertContactSubmission } from "../supabase";
 import "./Contact.css";
 
 const INITIAL = {
@@ -53,32 +52,19 @@ export default function Contact({ navigate }) {
     setStatus("sending");
     setErrorMsg("");
 
-    // Run both writes independently so one failure doesn't block the other
-    const results = await Promise.allSettled([
-      // Firebase
-      addDoc(collection(firestore, "contact_submissions"), {
+    try {
+      await addDoc(collection(firestore, "contact_submissions"), {
         ...form,
         submittedAt: serverTimestamp(),
         source: "contact_page",
-      }),
-      // Supabase
-      insertContactSubmission(form),
-    ]);
-
-    const failures = results.filter((r) => r.status === "rejected");
-    if (failures.length > 0) {
-      failures.forEach((f) => console.error("Submission error:", f.reason));
-    }
-
-    // Only show an error to the user if BOTH writes failed
-    if (failures.length === results.length) {
+      });
+      setStatus("success");
+      setForm(INITIAL);
+    } catch (err) {
+      console.error("Firebase error:", err);
       setStatus("error");
       setErrorMsg("Something went wrong. Please try again or email us directly.");
-      return;
     }
-
-    setStatus("success");
-    setForm(INITIAL);
   };
 
   return (

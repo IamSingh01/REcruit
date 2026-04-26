@@ -1,8 +1,12 @@
 import { useState } from "react";
 import "./SubmitCV.css";
 import { firestore } from "../firebase";
-import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { insertCvSubmission } from "../supabase";
+import {
+  collection,
+  doc,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 
 const INITIAL = {
   firstName: "",
@@ -56,8 +60,8 @@ export default function SubmitCV({ navigate }) {
     setErrorMsg("");
 
     try {
-      // ── 1. Upload to Cloudinary ────────────────────────────────────────────
-      let cloudinaryUrl = "";
+      let resumeUrl = "";
+
       if (form.resume) {
         const data = new FormData();
         data.append("file", form.resume);
@@ -65,15 +69,22 @@ export default function SubmitCV({ navigate }) {
 
         const uploadRes = await fetch(
           "https://api.cloudinary.com/v1_1/djqiyx6wn/auto/upload",
-          { method: "POST", body: data }
+          {
+            method: "POST",
+            body: data,
+          }
         );
-        const uploadData = await uploadRes.json();
 
-        if (!uploadData.secure_url) throw new Error("Cloudinary upload failed");
-        cloudinaryUrl = uploadData.secure_url;
+        const uploadData = await uploadRes.json();
+        console.log(uploadData);
+
+        if (!uploadData.secure_url) {
+          throw new Error("Upload failed");
+        }
+
+        resumeUrl = uploadData.secure_url;
       }
 
-      // ── 2. Build shared identifiers ────────────────────────────────────────
       const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`.trim();
       const slug = fullName
         .toLowerCase()
@@ -81,54 +92,28 @@ export default function SubmitCV({ navigate }) {
         .replace(/^-+|-+$/g, "");
       const docId = `${slug}-${Date.now()}`;
 
-      // ── 3. Dual-write: Firebase + Supabase (independent) ──────────────────
-      const results = await Promise.allSettled([
-        // Firebase
-        setDoc(doc(firestore, "cv_submissions", docId), {
-          name: fullName,
-          firstName: form.firstName,
-          lastName: form.lastName,
-          email: form.email,
-          phone: "+971" + form.phone,
-          message: form.message,
-          newsletter: form.newsletter,
-          resumeUrl: cloudinaryUrl,
-          submittedAt: serverTimestamp(),
-          source: "send_cv_page",
-        }),
-
-        // Supabase (also uploads file to Supabase Storage internally)
-        insertCvSubmission({
-          firstName: form.firstName,
-          lastName: form.lastName,
-          email: form.email,
-          phone: form.phone,
-          message: form.message,
-          newsletter: form.newsletter,
-          cloudinaryUrl,
-          resumeFile: form.resume, // raw File for Supabase Storage upload
-        }),
-      ]);
-
-      const failures = results.filter((r) => r.status === "rejected");
-      if (failures.length > 0) {
-        failures.forEach((f) => console.error("CV submission error:", f.reason));
-      }
-
-      // Only surface an error if every destination failed
-      if (failures.length === results.length) {
-        throw new Error("All submission destinations failed");
-      }
+      await setDoc(doc(firestore, "cv_submissions", docId), {
+        name: fullName,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        phone: "+971" + form.phone,
+        message: form.message,
+        newsletter: form.newsletter,
+        resumeUrl,
+        submittedAt: serverTimestamp(),
+        source: "send_cv_page",
+      });
 
       setStatus("success");
       setForm(INITIAL);
+
     } catch (err) {
       console.error(err);
       setStatus("error");
       setErrorMsg("Upload failed. Please try again.");
     }
   };
-
   return (
     <>
       <section className="contact-hero section--dark">
@@ -143,6 +128,7 @@ export default function SubmitCV({ navigate }) {
             </h1>
             <div className="divider" />
             <div className="contact-info">
+              {/* ✅ both links now use contact-info__social for flex row layout */}
               <a
                 href="http://instagram.com/withrecruit"
                 target="_blank"

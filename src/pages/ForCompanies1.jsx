@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { firestore, collection, addDoc, serverTimestamp } from "../firebase";
-import { insertCompanySubmission } from "../supabase";
 import "./ForCompanies.css";
 
 const INITIAL = {
@@ -53,30 +52,19 @@ export default function ForCompanies({ navigate }) {
     setStatus("sending");
     setErrorMsg("");
 
-    const results = await Promise.allSettled([
-      // Firebase
-      addDoc(collection(firestore, "company_submissions"), {
+    try {
+      await addDoc(collection(firestore, "company_submissions"), {
         ...form,
         submittedAt: serverTimestamp(),
         source: "for_companies_page",
-      }),
-      // Supabase
-      insertCompanySubmission(form),
-    ]);
-
-    const failures = results.filter((r) => r.status === "rejected");
-    if (failures.length > 0) {
-      failures.forEach((f) => console.error("Submission error:", f.reason));
-    }
-
-    if (failures.length === results.length) {
+      });
+      setStatus("success");
+      setForm(INITIAL);
+    } catch (err) {
+      console.error("Firebase error:", err);
       setStatus("error");
       setErrorMsg("Something went wrong. Please try again or email us directly.");
-      return;
     }
-
-    setStatus("success");
-    setForm(INITIAL);
   };
 
   return (
