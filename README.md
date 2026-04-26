@@ -1,16 +1,45 @@
-# React + Vite
+# REcruit
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern recruitment platform built with React and Vite, designed to connect ambitious candidates with growing companies through a clean, professional, and responsive digital experience.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+REcruit helps job seekers submit applications and allows companies to connect for hiring needs. The project focuses on premium UI design, smooth user experience, and scalable frontend architecture.
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Fully responsive modern website
+- Premium landing page design
+- Submit CV / candidate application page
+- Employer hiring inquiry forms
+- About / Contact pages
+- Smooth single-page navigation
+- Ready for Firebase / Supabase backend integration
+- Fast performance with Vite
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React.js
+- Vite
+- JavaScript
+- CSS3
+- Responsive Design
+
+## Pages Included
+
+- Home
+- For Candidates
+- For Companies
+- About
+- Contact Us
+- Submit CV
+
+## Installation
+
+```bash
+npm install
+npm run dev
+
+## Educational Use
+
+This project was created for personal learning, portfolio, and educational purposes to practice frontend development, UI/UX design, responsive layouts, and real-world recruitment website workflows. 
