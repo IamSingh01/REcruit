@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { firestore, collection, addDoc, serverTimestamp } from "../firebase";
 import { insertCompanySubmission } from "../supabase";
 import "./ForCompanies.css";
@@ -16,12 +16,17 @@ export default function ForCompanies({ navigate }) {
   const [form, setForm] = useState(INITIAL);
   const [status, setStatus] = useState("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const formRef = useRef(null);
 
   const set = (field) => (e) =>
     setForm((f) => ({
       ...f,
       [field]: e.target.type === "checkbox" ? e.target.checked : e.target.value,
     }));
+
+  const scrollToForm = () => {
+    formRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,15 +59,22 @@ export default function ForCompanies({ navigate }) {
     setErrorMsg("");
 
     const results = await Promise.allSettled([
-      // Firebase
       addDoc(collection(firestore, "company_submissions"), {
         ...form,
         submittedAt: serverTimestamp(),
         source: "for_companies_page",
       }),
-      // Supabase
-      insertCompanySubmission(form),
+      insertCompanySubmission({
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        phone: form.phone,
+        message: form.message,
+        newsletter: form.newsletter,
+      }),
     ]);
+
+    console.log("Submit result:", results);
 
     const failures = results.filter((r) => r.status === "rejected");
     if (failures.length > 0) {
@@ -97,7 +109,7 @@ export default function ForCompanies({ navigate }) {
               We partner with businesses that value quality, speed, and a personal
               approach to hiring. Join the companies already growing with our support.
             </p>
-            <button className="btn-primary" onClick={() => navigate("/contact-us")}>Work With Us</button>
+            <button className="btn-primary" onClick={scrollToForm}>Work With Us</button>
           </div>
         </div>
       </section>
@@ -140,7 +152,7 @@ export default function ForCompanies({ navigate }) {
       </section>
 
       {/* CTA + Contact Form */}
-      <section className="section section--dark">
+      <section className="section section--dark" ref={formRef}>
         <div className="container companies-contact">
           <div className="companies-contact__left">
             <span className="section-label" style={{ color: "var(--accent)" }}>Get In Touch</span>

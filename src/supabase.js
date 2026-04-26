@@ -1,7 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 
 // ─── Lazy client — only created on first use ─────────────────────────────────
-// This prevents a crash on startup when env vars aren't set yet.
 let _client = null;
 
 function getClient() {
@@ -31,7 +30,7 @@ export async function insertContactSubmission(data) {
             phone: data.phone ? `+971${data.phone}` : null,
             message: data.message,
             newsletter: data.newsletter,
-            source: "contact_page",
+            source: data.source || "contact_page",
         },
     ]);
     if (error) throw error;
@@ -52,17 +51,20 @@ export async function insertCompanySubmission(data) {
             source: "for_companies_page",
         },
     ]);
-    if (error) throw error;
+    if (error) {
+        console.error("Company submission insert error:", error);
+        throw error;
+    }
     console.log("Company submission inserted successfully");
 }
 
 // ─── CV submissions ───────────────────────────────────────────────────────────
 export async function insertCvSubmission(data) {
     console.log("Inserting CV submission to Supabase:", data);
-    let supabaseStorageUrl = null;
 
+    let resumeUrl = null;
     if (data.resumeFile) {
-        supabaseStorageUrl = await uploadCvToSupabase(
+        resumeUrl = await uploadCvToSupabase(
             data.resumeFile,
             data.firstName,
             data.lastName
@@ -77,13 +79,13 @@ export async function insertCvSubmission(data) {
             phone: data.phone ? `+971${data.phone}` : null,
             message: data.message,
             newsletter: data.newsletter,
-            cloudinary_url: data.cloudinaryUrl || null,
-            supabase_storage_url: supabaseStorageUrl,
+            resume: resumeUrl,
             source: "send_cv_page",
         },
     ]);
     if (error) throw error;
     console.log("CV submission inserted successfully");
+    return resumeUrl;
 }
 
 // ─── Supabase Storage CV upload ───────────────────────────────────────────────
@@ -97,8 +99,8 @@ async function uploadCvToSupabase(file, firstName, lastName) {
 
     const client = getClient();
 
-    const { error } = await client
-        .storage.from("resumes")
+    const { error } = await client.storage
+        .from("resumes")
         .upload(path, file, { upsert: false });
 
     if (error) throw error;

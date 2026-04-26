@@ -56,24 +56,6 @@ export default function SubmitCV({ navigate }) {
     setErrorMsg("");
 
     try {
-      // ── 1. Upload to Cloudinary ────────────────────────────────────────────
-      let cloudinaryUrl = "";
-      if (form.resume) {
-        const data = new FormData();
-        data.append("file", form.resume);
-        data.append("upload_preset", "recruit_cv");
-
-        const uploadRes = await fetch(
-          "https://api.cloudinary.com/v1_1/djqiyx6wn/auto/upload",
-          { method: "POST", body: data }
-        );
-        const uploadData = await uploadRes.json();
-
-        if (!uploadData.secure_url) throw new Error("Cloudinary upload failed");
-        cloudinaryUrl = uploadData.secure_url;
-      }
-
-      // ── 2. Build shared identifiers ────────────────────────────────────────
       const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`.trim();
       const slug = fullName
         .toLowerCase()
@@ -81,9 +63,17 @@ export default function SubmitCV({ navigate }) {
         .replace(/^-+|-+$/g, "");
       const docId = `${slug}-${Date.now()}`;
 
-      // ── 3. Dual-write: Firebase + Supabase (independent) ──────────────────
+      const supabaseUrl = await insertCvSubmission({
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        phone: form.phone,
+        message: form.message,
+        newsletter: form.newsletter,
+        resumeFile: form.resume,
+      });
+
       const results = await Promise.allSettled([
-        // Firebase
         setDoc(doc(firestore, "cv_submissions", docId), {
           name: fullName,
           firstName: form.firstName,
@@ -92,21 +82,9 @@ export default function SubmitCV({ navigate }) {
           phone: "+971" + form.phone,
           message: form.message,
           newsletter: form.newsletter,
-          resumeUrl: cloudinaryUrl,
+          resumeUrl: supabaseUrl,
           submittedAt: serverTimestamp(),
           source: "send_cv_page",
-        }),
-
-        // Supabase (also uploads file to Supabase Storage internally)
-        insertCvSubmission({
-          firstName: form.firstName,
-          lastName: form.lastName,
-          email: form.email,
-          phone: form.phone,
-          message: form.message,
-          newsletter: form.newsletter,
-          cloudinaryUrl,
-          resumeFile: form.resume, // raw File for Supabase Storage upload
         }),
       ]);
 
@@ -115,7 +93,6 @@ export default function SubmitCV({ navigate }) {
         failures.forEach((f) => console.error("CV submission error:", f.reason));
       }
 
-      // Only surface an error if every destination failed
       if (failures.length === results.length) {
         throw new Error("All submission destinations failed");
       }
