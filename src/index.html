@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>REcruit</title>
+
+    <!-- ✅ Firebase CDN — must load BEFORE your React bundle -->
+    <!-- Use the "compat" build so firebase is available as a global -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Vite injects your bundled React app here -->
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

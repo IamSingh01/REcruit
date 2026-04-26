@@ -1,0 +1,135 @@
+.footer {
+  background: var(--black);
+  color: var(--white);
+  padding: 80px 0 0;
+  margin-top: auto;
+}
+
+.footer__inner {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 60px;
+  padding-bottom: 60px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.footer__logo-img {
+  height: 44px;
+  width: auto;
+  display: block;
+  margin-bottom: 16px;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  transition: opacity var(--transition);
+}
+
+.footer__logo-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: inline-block;
+}
+
+.footer__logo-btn:hover .footer__logo-img {
+  opacity: 1;
+}
+
+/* Fallback text logo */
+.footer__logo {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--white);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 16px;
+  display: block;
+  transition: color var(--transition);
+}
+
+.footer__logo:hover {
+  color: var(--accent-light);
+}
+
+.footer__logo-re {
+  color: var(--accent-light);
+}
+
+.footer__tagline {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: rgba(245,242,238,0.45);
+  max-width: 280px;
+}
+
+.footer__col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer__col-label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  margin-bottom: 4px;
+}
+
+.footer__col button,
+.footer__col a {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: rgba(245,242,238,0.55);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  transition: color var(--transition), transform var(--transition);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.footer__col button:hover,
+.footer__col a:hover {
+  color: var(--white);
+  transform: translateX(4px);
+}
+
+.footer__bottom {
+  padding: 24px 4vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer__bottom p {
+  font-size: 0.78rem;
+  color: rgba(245,242,238,0.25);
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .footer__inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer__inner {
+    grid-template-columns: 1fr;
+  }
+}
+

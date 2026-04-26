@@ -1,0 +1,444 @@
+.candidates-hero {
+  min-height: calc(90vh - var(--nav-height));
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--light-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.candidates-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at 80% 50%, rgba(90, 94, 179, 0.07) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.candidates-hero__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  padding-top: 60px;
+  padding-bottom: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.candidates-hero__sub {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.hero-highlight {
+  position: relative;
+  color: var(--accent);
+  font-weight: 700;
+  padding: 0 0.08em;
+  z-index: 1;
+}
+
+.hero-highlight::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.08em;
+  height: 0.7em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 20'%3E%3Cpath d='M2 12c16-10 34 10 52 0s34-10 52 0' fill='none' stroke='rgba(255,200,60,0.85)' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero-highlight {
+  animation: highlight-pop 0.9s ease both;
+}
+
+@keyframes highlight-pop {
+  0% {
+    transform: scale(0.96);
+    opacity: 0.7;
+  }
+
+  60% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.candidates-hero__image-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+  animation: float-image 8s ease-in-out infinite;
+}
+
+@keyframes float-image {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.candidates-hero__image-wrap img {
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.8s ease;
+}
+
+.candidates-hero__image-wrap:hover img {
+  transform: scale(1.03);
+}
+
+.candidates-hero__image-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--accent);
+  color: var(--white);
+  padding: 12px 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%);
+  box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.15);
+  animation: badge-pop 1s ease both;
+}
+
+@keyframes badge-pop {
+  0% {
+    transform: translateY(-8px) scale(0.95);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Why grid */
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.why-card {
+  padding: 40px 0;
+  border-top: 2px solid var(--light-border);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition), border-color var(--transition);
+}
+
+.why-card:hover {
+  transform: translateY(-4px);
+  border-top-color: var(--accent);
+}
+
+.why-card__accent {
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  margin-bottom: 24px;
+  transition: width var(--transition);
+  border-radius: 2px;
+}
+
+.why-card:hover .why-card__accent {
+  width: 80px;
+}
+
+.why-card__title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+.why-card__body {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--mid);
+}
+
+/* Why CTA — full width, centred */
+.why-cta {
+  margin-top: 56px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ── How It Works ── */
+.how-it-works-header {
+  margin-bottom: 60px;
+}
+
+/* Step cards */
+.steps-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  position: relative;
+}
+
+.step-card {
+  padding: 48px 40px;
+  border: 1px solid var(--light-border);
+  border-right: none;
+  position: relative;
+  background: var(--white);
+  transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+  overflow: hidden;
+}
+
+.step-card:last-child {
+  border-right: 1px solid var(--light-border);
+}
+
+.step-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition);
+}
+
+.step-card:hover {
+  background: var(--off-white);
+  box-shadow: 0 16px 48px rgba(90, 94, 179, 0.1);
+  transform: translateY(-6px);
+  z-index: 1;
+}
+
+.step-card:hover::before {
+  transform: scaleX(1);
+}
+
+.step-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.step-card__num {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--accent);
+  opacity: 0.8;
+  line-height: 1;
+  transition: opacity var(--transition);
+}
+
+.step-card:hover .step-card__num {
+  opacity: 0.6;
+}
+
+.step-card__icon {
+  font-size: 1.4rem;
+  color: var(--accent);
+  opacity: 0.5;
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+
+.step-card:hover .step-card__icon {
+  opacity: 1;
+  transform: scale(1.15) rotate(15deg);
+}
+
+.step-card__title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 400;
+  margin-bottom: 14px;
+  line-height: 1.2;
+}
+
+.step-card__body {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--mid);
+}
+
+/* Connector arrow between cards */
+.step-card__connector {
+  display: none;
+  /* arrows handled via ::after on parent */
+}
+
+/* CTA below steps */
+.steps-cta {
+  margin-top: 48px;
+}
+
+.steps-cta__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 48px;
+  background: var(--accent);
+  gap: 40px;
+}
+
+.steps-cta__text {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--white);
+  opacity: 0.9;
+}
+
+.steps-cta__inner .btn-white {
+  flex-shrink: 0;
+}
+
+/* ── Candidate Success Support — bg image ── */
+.candidates-support-section {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding: 100px 0;
+}
+
+.candidates-support-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+      rgba(10, 10, 20, 0.55) 0%,
+      rgba(17, 17, 17, 0.45) 50%,
+      rgba(90, 94, 179, 0.18) 100%);
+
+  backdrop-filter: blur(5px);
+}
+
+.candidates-support {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 80px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.support-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.support-list li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.95rem;
+  color: rgba(245, 242, 238, 0.75);
+  line-height: 1.5;
+  transition: color var(--transition), transform var(--transition);
+  cursor: default;
+}
+
+.support-list li:hover {
+  color: rgba(245, 242, 238, 1);
+  transform: translateX(6px);
+}
+
+.support-list__dot {
+  color: var(--accent-light);
+  font-size: 0.6rem;
+  flex-shrink: 0;
+}
+
+.candidates-support__cta-box {
+  background: rgba(245, 242, 238, 0.06);
+  border: 1px solid rgba(245, 242, 238, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 48px 40px;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.candidates-support__cta-box:hover {
+  background: rgba(245, 242, 238, 0.1);
+  border-color: rgba(245, 242, 238, 0.3);
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .candidates-hero__inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .candidates-hero__image-wrap img {
+    height: 320px;
+  }
+
+  .why-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .steps-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .step-card {
+    border-right: 1px solid var(--light-border);
+    border-bottom: none;
+  }
+
+  .step-card:last-child {
+    border-bottom: 1px solid var(--light-border);
+  }
+
+  .steps-cta__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px;
+    gap: 24px;
+  }
+
+  .steps-cta__inner .btn-primary {
+    background: #f5f2ee;
+  }
+
+  .candidates-support {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .candidates-support-section {
+    background-attachment: scroll;
+  }
+}
